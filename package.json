@@ -1,0 +1,18 @@
+{
+  "author": "Jace Bennett <jace.bennett@gmail.com>",
+  "name": "labrat",
+  "description": "unit testing sessions for js",
+  "version": "0.0.0",
+  "dependencies": {},
+  "devDependencies": {
+    "coffee-script" : "*",
+    "mocha": "*",
+    "chai": "*",
+    "sinon": "*",
+    "sinon-chai": "*"
+  },
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
