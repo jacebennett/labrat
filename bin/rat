@@ -1,3 +1,58 @@
 #!/usr/bin/env node
 
-console.log("hello, world");
+var Rat = require("../lib/rat");
+var program = require("commander");
+var rat = new Rat();
+
+program.version('0.0.1');
+
+program
+  .command('init')
+  .description('initialize a new labrat root')
+  .action(function(){
+    rat.init();
+  });
+
+program
+  .command('add <files>')
+  .description('add files to the current session')
+  .action(function(file){
+    rat.add(file);
+  });
+
+program
+  .command('clear')
+  .description('remove all files from the current session')
+  .action(function(){
+    rat.clear();
+  });
+
+program
+  .command('remove <files>')
+  .description('remove files from the current session')
+  .action(function(file){
+    rat.remove(file);
+  });
+
+program
+  .command('session <name>')
+  .description('load or create a named session')
+  .action(function(name){
+    rat.selectSession(name);
+  });
+
+program
+  .command('run')
+  .description('run all specs the current session')
+  .action(function(){
+    rat.run();
+  });
+
+program
+  .command('debug')
+  .description('debug all specs in current session')
+  .action(function(){
+    rat.debug();
+  });
+
+program.parse(process.argv)

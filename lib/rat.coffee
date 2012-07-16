@@ -1,32 +1,46 @@
-fs = require 'fs'
+Util = require './util'
 Session = require './session'
-
-ensureFolder = (name)->
-  try
-    fs.mkdirSync(name)
-  catch e
-    throw e unless /EEXIST/.test(e.message)
+Config = require './config'
+Runner = require './runner'
 
 class Rat
   init: ->
-    ensureFolder ".labrat"
+    Util.ensureFolder ".labrat"
 
-  add: (name)->
-    @currentSession (session)->
-      session.add name
+  add: (filename)->
+    @loadEnv().spread (session)->
+      session.add filename
 
-  currentSession: (callback)->
-    if @config().currentSession?
-      @loadSession(@config().currentSession, callback)
-    else
-      @loadSession("default", callback)
+  remove: (filename)->
+    @loadEnv().spread (session)->
+      session.remove filename
 
-  loadSession: (name, callback)->
-    sessionPath = ".labrat/" + sessionName + ".session"
-    fs.readFile sessionPath, (contents)->
-      callback Session.parse(contents)
+  clear: ->
+    @loadEnv().spread (session)->
+      session.reset()
 
-  config: ->
-    {}
+  selectSession: (sessionName)->
+    Config.load().then (config)->
+      config.selectSession(sessionName)
+
+  run: ->
+    @loadEnv().spread (session, config)->
+      new Runner(config).run session
+
+  debug: ->
+    @loadEnv().spread (session, config)->
+      new Runner(config).debug session
+
+  loadEnv: ->
+    Config.load()
+      .then (config)->
+        sname = config.session
+        Session.load(sname)
+          .then (session)->
+            [session, config]
+          .fail (reason)->
+            console.log "unable to load session #{sname}: #{reason}"
+      .fail (reason)->
+        console.log "unable to load config: #{reason}"
 
 module.exports = Rat

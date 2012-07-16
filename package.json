@@ -3,7 +3,12 @@
   "name": "labrat",
   "description": "unit testing sessions for js",
   "version": "0.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "q": "*",
+    "xtend": "*",
+    "handlebars": "*",
+    "commander": "*"
+  },
   "devDependencies": {
     "coffee-script" : "*",
     "mocha": "*",
