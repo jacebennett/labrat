@@ -32,12 +32,12 @@ Session.parse = (name, data)->
 
 Session.load = (name)->
   Util.ensureFile(@filePath(name), '\n').then =>
-    Util.readFile(@filePath(name), 'utf-8').then (data)->
+    Util.readFile(@filePath(name), 'utf8').then (data)->
       Session.parse(name, data)
 
 Session.save = (name, files)->
   data = files.join('\n') + '\n'
-  Util.writeFile @filePath(name), data
+  Util.writeFile @filePath(name), data, 'utf8'
 
 Session.filePath = (name)-> ".labrat/#{name}.session"
 

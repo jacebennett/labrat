@@ -8,39 +8,44 @@ class Rat
     Util.ensureFolder ".labrat"
 
   add: (filename)->
-    @loadEnv().spread (session)->
+    @withSession (session)->
       session.add filename
 
   remove: (filename)->
-    @loadEnv().spread (session)->
+    @withSession (session)->
       session.remove filename
 
   clear: ->
-    @loadEnv().spread (session)->
+    @withSession (session)->
       session.reset()
 
   selectSession: (sessionName)->
-    Config.load().then (config)->
+    debugger
+    @withConfig (config)->
+      debugger
       config.selectSession(sessionName)
 
   run: ->
-    @loadEnv().spread (session, config)->
+    @withSession (session, config)->
       new Runner(config).run session
 
   debug: ->
-    @loadEnv().spread (session, config)->
+    @withSession (session, config)->
       new Runner(config).debug session
 
-  loadEnv: ->
+  withConfig: (action)->
     Config.load()
-      .then (config)->
-        sname = config.session
-        Session.load(sname)
-          .then (session)->
-            [session, config]
-          .fail (reason)->
-            console.log "unable to load session #{sname}: #{reason}"
-      .fail (reason)->
-        console.log "unable to load config: #{reason}"
+      .then(action)
+      .fail(@handleError)
+
+  withSession: (action)->
+    @withConfig (config)=>
+      Session.load(config.session)
+        .then (session)->
+          [session, config]
+        .spread(action)
+
+  handleError: (error)->
+    console.log "unexpected error: #{error}"
 
 module.exports = Rat

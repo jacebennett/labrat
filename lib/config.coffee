@@ -24,12 +24,12 @@ Config.load = ->
     Util.promise -> cached
   else
     Util.ensureFile(@filePath(), '{}').then (result)=>
-      Util.readFile(@filePath(), 'utf-8').then (strData)->
+      Util.readFile(@filePath(), 'utf8').then (strData)->
         json = JSON.parse strData
         cached = new Config json
 
 Config.save = (json)->
-  Util.writefile @filePath(), JSON.stringify(json), 'utf-8'
+  Util.writeFile @filePath(), JSON.stringify(json), 'utf8'
 
 Config.filePath = -> "labrat.json"
 

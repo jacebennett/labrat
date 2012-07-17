@@ -25,7 +25,7 @@ class Runner
     lines = []
     lines.push(tmpl({file: i})) for i in session.files
     manifestStr = lines.join('\n') + '\n'
-    Util.writeFile @config.manifest, manifestStr
+    Util.writeFile @config.manifest, manifestStr, 'utf8'
 
   build: ->
     Util.shellExec @config.buildCmd

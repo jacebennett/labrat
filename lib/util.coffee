@@ -13,8 +13,11 @@ Util =
     deferred = Q.defer()
     fs.exists name, (exists)=>
       unless exists
-        @writeFile(name, defaultContent || '', 'utf-8').then ->
-          deferred.resolve true
+        @writeFile(name, defaultContent || '', 'utf8')
+          .then ->
+            deferred.resolve true
+          .fail (e)->
+            deferred.reject e
       else
         deferred.resolve false
     deferred.promise
