@@ -10,49 +10,51 @@ program
   .command('init')
   .description('initialize a new labrat root')
   .action(function(){
-    rat.init();
+    this.result = rat.init();
   });
 
 program
   .command('add <files>')
   .description('add files to the current session')
   .action(function(file){
-    rat.add(file);
+    this.result = rat.add(file);
   });
 
 program
   .command('clear')
   .description('remove all files from the current session')
   .action(function(){
-    rat.clear();
+    this.result = rat.clear();
   });
 
 program
   .command('remove <files>')
   .description('remove files from the current session')
   .action(function(file){
-    rat.remove(file);
+    this.result = rat.remove(file);
   });
 
 program
   .command('session <name>')
   .description('load or create a named session')
   .action(function(name){
-    rat.selectSession(name);
+    this.result = rat.selectSession(name);
   });
 
 program
   .command('run')
   .description('run all specs the current session')
   .action(function(){
-    rat.run();
+    this.result = rat.run();
   });
 
 program
   .command('debug')
   .description('debug all specs in current session')
   .action(function(){
-    rat.debug();
+    this.result = rat.debug();
   });
 
-program.parse(process.argv)
+program.parse(process.argv).result.fail(function(err){
+  console.log(err.stack);
+});

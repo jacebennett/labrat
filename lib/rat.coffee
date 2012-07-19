@@ -20,9 +20,7 @@ class Rat
       session.reset()
 
   selectSession: (sessionName)->
-    debugger
     @withConfig (config)->
-      debugger
       config.selectSession(sessionName)
 
   run: ->
@@ -36,16 +34,11 @@ class Rat
   withConfig: (action)->
     Config.load()
       .then(action)
-      .fail(@handleError)
 
   withSession: (action)->
-    @withConfig (config)=>
+    @withConfig (config)->
       Session.load(config.session)
         .then (session)->
-          [session, config]
-        .spread(action)
-
-  handleError: (error)->
-    console.log "unexpected error: #{error}"
+          action session, config
 
 module.exports = Rat

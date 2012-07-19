@@ -3,11 +3,11 @@ Q = require 'q'
 Handlebars = require 'handlebars'
 extend = require 'xtend'
 
+wrappedMkdir = Q.nbind(fs.mkdir)
+
 Util =
   ensureFolder: (name)->
-    try
-      fs.mkdirSync(name)
-    catch e
+    wrappedMkdir(name).fail (e)->
       throw e unless /EEXIST/.test(e.message)
   ensureFile: (name, defaultContent)->
     deferred = Q.defer()
